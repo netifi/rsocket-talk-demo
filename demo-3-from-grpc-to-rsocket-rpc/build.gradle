@@ -1,0 +1,83 @@
+plugins {
+    id 'com.google.protobuf' version '0.8.6'
+    id 'java'
+    id 'idea'
+}
+
+sourceCompatibility = 1.8
+
+group = "com.example.rsocket"
+
+ext {
+    reactiveGrpcVersion = '0.9.0'
+    grpcVersion = '1.16.1'
+    rsocketVersion = '0.11.14'
+    rsocketRpcVersion = '0.2.10'
+    protobufVersion = '3.6.1'
+}
+
+dependencies {
+    compile "com.google.protobuf:protobuf-java:$protobufVersion"
+    compile "io.grpc:grpc-stub:${grpcVersion}"
+    compile "io.grpc:grpc-netty:${grpcVersion}"
+    compile "io.grpc:grpc-protobuf:${grpcVersion}"
+    compile "com.salesforce.servicelibs:reactor-grpc-stub:${reactiveGrpcVersion}"
+    compile "io.rsocket.rpc:rsocket-rpc-core:$rsocketRpcVersion"
+    compile "io.rsocket:rsocket-transport-netty:$rsocketVersion"
+}
+
+sourceSets {
+    main {
+        proto { srcDir 'src/main/proto' }
+    }
+
+    test {
+        proto { srcDir 'src/test/proto' }
+    }
+}
+
+protobuf {
+    generatedFilesBaseDir = "${projectDir}/src/generated"
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+        reactorGRpc {
+            artifact = "com.salesforce.servicelibs:reactor-grpc:${reactiveGrpcVersion}:jdk8@jar"
+        }
+        rsocketRpc {
+            artifact = "io.rsocket.rpc:rsocket-rpc-protobuf:$rsocketRpcVersion"
+        }
+        generateProtoTasks {
+            ofSourceSet('main')*.plugins {
+                rsocketRpc  {}
+                grpc {}
+                reactorGRpc {}
+            }
+        }
+    }
+}
+
+idea {
+    module {
+        sourceDirs += file("src/main/proto")
+        sourceDirs += file("src/generated/main/java")
+        sourceDirs += file("src/generated/main/rsocketRpc")
+        sourceDirs += file("src/generated/main/grpc")
+        sourceDirs += file("src/generated/main/reactorGRpc")
+
+        generatedSourceDirs += file('src/generated/main/java')
+        generatedSourceDirs += file('src/generated/main/rsocketRpc')
+        generatedSourceDirs += file('src/generated/main/grpc')
+        generatedSourceDirs += file('src/generated/main/reactorGRpc')
+    }
+}
+
+clean {
+    delete 'src/generated'
+}

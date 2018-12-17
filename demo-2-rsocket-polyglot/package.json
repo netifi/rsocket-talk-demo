@@ -1,0 +1,19 @@
+{
+  "name": "rsocket-js-hello-server",
+  "version": "0.0.1",
+  "description": "A demo application of RSocket JS though websocket connection",
+  "main": "index.js",
+  "repository": "https://github.com/netifi/springone-demo",
+  "author": "Oleh Dokuka <oleh@netifi.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "rsocket-flowable": "^0.0.9",
+    "rsocket-core": "^0.0.4",
+    "rsocket-websocket-server": "^0.0.9",
+    "rsocket-types": "^0.0.9"
+  },
+  "scripts": {
+    "start": "node ./src/main/js/index.js"
+  }
+}

@@ -1,0 +1,5 @@
+rootProject.name = 'rsocket-talk-demo'
+
+include 'demo-1-rsocket-java'
+include 'demo-2-rsocket-polyglot'
+include 'demo-3-from-grpc-to-rsocket-rpc'
